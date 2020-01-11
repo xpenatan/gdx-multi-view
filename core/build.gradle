@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+}
+
+apply from: '../dependencies.gradle'
+
+def lib_name = "gdx-frame-viewport"
+
+dependencies {
+	implementation "com.badlogicgames.gdx:gdx-jnigen:$project.gdxVersion"
+	implementation "com.badlogicgames.gdx:gdx-platform:$project.gdxVersion:natives-desktop"
+	implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$project.gdxVersion"
+
+}
+
+sourceSets.main.java.srcDirs = [ "src/main/java/" ]
+sourceSets.main.resources.srcDirs = ["src/main/java/"]
+
+task fromClasses (type: Jar) {
+	from (sourceSets.main.output){
+	}
+}
+
+publishing {
+	publications {
+		gdxClasses(MavenPublication) {
+			version project.gdxFrameViewportVersion
+			project.version = project.gdxFrameViewportVersion
+			artifactId lib_name
+			artifact fromClasses
+		}
+	}
+}
