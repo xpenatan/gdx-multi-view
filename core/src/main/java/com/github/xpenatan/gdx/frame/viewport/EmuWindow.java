@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 /**
 * This class was originally from XpeEngine and its now public. <br><br>
@@ -62,6 +63,8 @@ public abstract class EmuWindow {
 	}
 
 	public EmuWindow(EmuInput input) {
+		if(input == null)
+			throw new GdxRuntimeException("Input cannot be null");
 		this.emuGraphics = new EmuGraphics(this, Gdx.graphics);
 		this.emuInput = input;
 		this.emuGL20 = Gdx.gl30 != null ? new EmuGL30(Gdx.gl30) : new EmuGL20(Gdx.gl20);
@@ -72,7 +75,7 @@ public abstract class EmuWindow {
 		return emuInput;
 	}
 
-	public void begin (boolean isWindowFocused, boolean isWindowHovered, int windowX, int windowY, int windowWidth, int windowHeight) {
+	public boolean begin (boolean isWindowFocused, boolean isWindowHovered, int windowX, int windowY, int windowWidth, int windowHeight) {
 		if (begin == false) {
 			begin = true;
 			lastFrameFocus = this.isWindowFocused;
@@ -101,10 +104,12 @@ public abstract class EmuWindow {
 
 			emuGraphics.setSize(windowWidth, windowHeight);
 			emuInput.setWindow(isWindowFocused, isWindowHovered, windowX, windowY, windowWidth, windowHeight);
+			return true;
 		}
+		return false;
 	}
 
-	public void end () {
+	public boolean end () {
 		if (begin) {
 			begin = false;
 			Gdx.graphics = gdxGraphics;
@@ -119,7 +124,9 @@ public abstract class EmuWindow {
 
 			emuGL20.end();
 			reset = false;
+			return true;
 		}
+		return false;
 	}
 
 	public Texture getTexture() {
