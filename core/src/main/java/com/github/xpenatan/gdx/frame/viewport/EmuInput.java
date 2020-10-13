@@ -155,12 +155,12 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 			}
 
 			@Override
-			public boolean scrolled (int amount) {
+			public boolean scrolled (float amountX, float amountY) {
 				if (enable == false)
 					return false;
 
 				Gdx.graphics.requestRendering();
-				return processor != null ? processor.scrolled(amount) : false;
+				return processor != null ? processor.scrolled(amountX, amountY) : false;
 			}
 		};
 		setProcessor(inputProcessor);
@@ -375,17 +375,17 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 	}
 
 	@Override
-	public boolean scrolled(int amount) {
-		if(isWindowFocused && isWindowHovered)
-			return super.scrolled(amount);
-		return false;
-	}
-
-	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
 		if(isWindowFocused) {
 			return super.mouseMoved(screenX, screenY);
 		}
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(float amountX, float amountY) {
+		if(isWindowFocused && isWindowHovered)
+			return super.scrolled(amountX, amountY);
 		return false;
 	}
 

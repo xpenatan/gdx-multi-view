@@ -96,7 +96,7 @@ public class EmuEventQueue implements InputProcessor {
 				localProcessor.mouseMoved(q[i++], q[i++]);
 				break;
 			case SCROLLED:
-				localProcessor.scrolled(q[i++]);
+				localProcessor.scrolled(0, q[i++]);
 				break;
 			default:
 				throw new RuntimeException();
@@ -222,10 +222,11 @@ public class EmuEventQueue implements InputProcessor {
 		return false;
 	}
 
-	public synchronized boolean scrolled (int amount) {
+	@Override
+	public synchronized boolean scrolled(float amountX, float amountY) {
 		queue.add(SCROLLED);
 		queueTime();
-		queue.add(amount);
+		queue.add((int)amountY);
 		return false;
 	}
 

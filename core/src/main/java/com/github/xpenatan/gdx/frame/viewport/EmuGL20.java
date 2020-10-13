@@ -454,12 +454,12 @@ public class EmuGL20<T extends GL20> implements GL20 {
 	}
 
 	@Override
-	public String glGetActiveAttrib(int program, int index, IntBuffer size, Buffer type) {
+	public String glGetActiveAttrib(int program, int index, IntBuffer size, IntBuffer type) {
 		return gdxGL.glGetActiveAttrib(program, index, size, type);
 	}
 
 	@Override
-	public String glGetActiveUniform(int program, int index, IntBuffer size, Buffer type) {
+	public String glGetActiveUniform(int program, int index, IntBuffer size, IntBuffer type) {
 		return gdxGL.glGetActiveUniform(program, index, size, type);
 	}
 
