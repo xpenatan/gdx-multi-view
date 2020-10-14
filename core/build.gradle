@@ -8,9 +8,7 @@ def lib_name = "gdx-frame-viewport"
 
 dependencies {
 	implementation "com.badlogicgames.gdx:gdx-jnigen:$project.gdxVersion"
-	implementation "com.badlogicgames.gdx:gdx-platform:$project.gdxVersion:natives-desktop"
-	implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$project.gdxVersion"
-
+	implementation "com.badlogicgames.gdx:gdx:$project.gdxVersion"
 }
 
 sourceSets.main.java.srcDirs = [ "src/main/java/" ]
