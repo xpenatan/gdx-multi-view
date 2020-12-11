@@ -533,8 +533,18 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 	}
 
 	@Override
+	public void getTextInput(TextInputListener listener, String title, String text, String hint, OnscreenKeyboardType type) {
+		gdxInput.getTextInput(listener, title, text, hint, type);
+	}
+
+	@Override
 	public void setOnscreenKeyboardVisible(boolean visible) {
 		gdxInput.setOnscreenKeyboardVisible(visible);
+	}
+
+	@Override
+	public void setOnscreenKeyboardVisible(boolean visible, OnscreenKeyboardType type) {
+		gdxInput.setOnscreenKeyboardVisible(visible, type);
 	}
 
 	@Override
