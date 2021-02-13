@@ -272,6 +272,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if(!enable)
+			return false;
 		if(isWindowHovered) { // Fix when window is focus and goes out of focus and pass input to window. ImGui needs a least 1 frame delay to process input
 			if(rightClickFocus && button == Buttons.RIGHT)
 				needsFocus = true;
@@ -283,6 +285,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		if(!enable)
+			return false;
 		if(!touchDownInside.isEmpty())
 			return super.touchDragged(screenX, screenY, pointer);
 		return false;
@@ -290,6 +294,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		if(!enable)
+			return false;
 		boolean removed = touchDownInside.remove(button); // release mouse if it was pressed inside window
 		if(isWindowHovered || removed) { // Fix when window is focus and goes out of focus and pass input to window. ImGui needs a least 1 frame delay to process input
 			return super.touchUp(screenX, screenY, pointer, button);
@@ -299,6 +305,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean keyTyped(char character) {
+		if(!enable)
+			return false;
 		if(isWindowFocused)
 			return super.keyTyped(character);
 		return false;
@@ -306,6 +314,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean keyDown(int keycode) {
+		if(!enable)
+			return false;
 		keyDown.add(keycode);
 		if(isWindowFocused)
 			return super.keyDown(keycode);
@@ -314,6 +324,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean keyUp(int keycode) {
+		if(!enable)
+			return false;
 		keyDown.remove(keycode);
 		if(isWindowFocused)
 			return super.keyUp(keycode);
@@ -376,6 +388,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
+		if(!enable)
+			return false;
 		if(isWindowFocused) {
 			return super.mouseMoved(screenX, screenY);
 		}
@@ -384,6 +398,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean scrolled(float amountX, float amountY) {
+		if(!enable)
+			return false;
 		if(isWindowFocused && isWindowHovered)
 			return super.scrolled(amountX, amountY);
 		return false;
@@ -445,36 +461,50 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean isTouched() {
+		if(!enable)
+			return false;
 		return buttonPressed[0].contains(0) || buttonPressed[0].contains(1) || buttonPressed[0].contains(2);
 	}
 
 	@Override
 	public boolean justTouched() {
+		if(!enable)
+			return false;
 		return justTouched;
 	}
 
 	@Override
 	public boolean isTouched(int pointer) {
+		if(!enable)
+			return false;
 		return buttonPressed[pointer].contains(pointer) ;
 	}
 
 	@Override
 	public boolean isButtonPressed(int button) {
+		if(!enable)
+			return false;
 		return buttonPressed[0].contains(button);
 	}
 
 	@Override
 	public boolean isButtonJustPressed(int button) {
+		if(!enable)
+			return false;
 		return justPressedButtons[button];
 	}
 
 	@Override
 	public boolean isKeyPressed(int key) {
+		if(!enable)
+			return false;
 		return keyPressed.contains(key);
 	}
 
 	@Override
 	public boolean isKeyJustPressed(int key) {
+		if(!enable)
+			return false;
 		if (key < 0 || key > 256)
 			return false;
 		if (key == Keys.ANY_KEY)
@@ -589,6 +619,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean isCatchBackKey() {
+		if(!enable)
+			return false;
 		return gdxInput.isCatchBackKey();
 	}
 
@@ -599,6 +631,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean isCatchMenuKey() {
+		if(!enable)
+			return false;
 		return gdxInput.isCatchBackKey();
 	}
 
@@ -614,6 +648,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
 
 	@Override
 	public boolean isPeripheralAvailable(Peripheral peripheral) {
+		if(!enable)
+			return false;
 		return gdxInput.isPeripheralAvailable(peripheral);
 	}
 
