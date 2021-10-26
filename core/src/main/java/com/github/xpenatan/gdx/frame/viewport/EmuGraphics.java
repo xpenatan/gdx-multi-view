@@ -120,6 +120,11 @@ public class EmuGraphics implements Graphics, Disposable{
 	}
 
 	@Override
+	public float getBackBufferScale() {
+		return 0;
+	}
+
+	@Override
 	public long getFrameId() {
 		return frameId;
 	}
@@ -249,6 +254,11 @@ public class EmuGraphics implements Graphics, Disposable{
 	@Override
 	public void setVSync(boolean vsync) {
 		// Not supported
+	}
+
+	@Override
+	public void setForegroundFPS(int fps) {
+		gdxGraphics.setForegroundFPS(fps);
 	}
 
 	@Override

@@ -193,6 +193,11 @@ public class EmuGL30 extends EmuGL20<GL30> implements GL30 {
 	}
 
 	@Override
+	public Buffer glMapBufferRange(int target, int offset, int length, int access) {
+		return gdxGL.glMapBufferRange(target, offset, length, access);
+	}
+
+	@Override
 	public void glFlushMappedBufferRange (int target, int offset, int length)
 	{
 		gdxGL.glFlushMappedBufferRange(target, offset, length);

@@ -7,7 +7,6 @@ apply from: '../dependencies.gradle'
 def lib_name = "gdx-frame-viewport"
 
 dependencies {
-	implementation "com.badlogicgames.gdx:gdx-jnigen:$project.gdxVersion"
 	implementation "com.badlogicgames.gdx:gdx:$project.gdxVersion"
 }
 
