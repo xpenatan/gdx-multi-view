@@ -73,4 +73,8 @@ public class EmuApplicationWindow extends EmuWindow {
             created = false;
         }
     }
+
+    public ApplicationListener getApplicationListener() {
+        return applicationListener;
+    }
 }
