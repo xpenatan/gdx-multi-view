@@ -13,26 +13,24 @@ public class EmuApplicationWindow extends EmuWindow {
 	private ApplicationListener oldListener;
 	private ApplicationListener applicationListener;
 
+	private boolean created = false;
+
 	public EmuApplicationWindow() {
 	}
-
 
 	public EmuApplicationWindow(EmuInput input) {
 		super(input);
 	}
 
-	public EmuApplicationWindow(ApplicationListener applicationListener) {
-		oldListener = this.applicationListener;
-		this.applicationListener = applicationListener;
-	}
-
 	public void setApplicationListener(ApplicationListener applicationListener) {
+		oldListener = this.applicationListener;
 		this.applicationListener = applicationListener;
 		reset();
 	}
 
 	@Override
 	protected void onCreate() {
+		created = true;
 		if(applicationListener != null)
 			applicationListener.create();
 	}
@@ -66,6 +64,13 @@ public class EmuApplicationWindow extends EmuWindow {
 		if(oldListener != null) {
 			oldListener.dispose();
 			oldListener = null;
+		}
+		if(created) {
+			if(applicationListener != null) {
+				applicationListener.dispose();
+				applicationListener = null;
+			}
+			created = false;
 		}
 	}
 }
