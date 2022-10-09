@@ -1,6 +1,5 @@
 package com.github.xpenatan.gdx.frame.viewport.example;
 
-import java.util.ArrayList;
 import box2dLight.ChainLight;
 import box2dLight.ConeLight;
 import box2dLight.DirectionalLight;
@@ -33,6 +32,7 @@ import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
+import java.util.ArrayList;
 
 public class Box2dLightTest extends InputAdapter implements ApplicationListener {
 
@@ -51,27 +51,41 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
     TextureRegion textureRegion;
     Texture bg;
 
-    /** our box2D world **/
+    /**
+     * our box2D world
+     **/
     World world;
 
-    /** our boxes **/
+    /**
+     * our boxes
+     **/
     ArrayList<Body> balls = new ArrayList<Body>(BALLSNUM);
 
-    /** our ground box **/
+    /**
+     * our ground box
+     **/
     Body groundBody;
 
-    /** our mouse joint **/
+    /**
+     * our mouse joint
+     **/
     MouseJoint mouseJoint = null;
 
-    /** a hit body **/
+    /**
+     * a hit body
+     **/
     Body hitBody = null;
 
-    /** pixel perfect projection for font rendering */
+    /**
+     * pixel perfect projection for font rendering
+     */
     Matrix4 normalProjection = new Matrix4();
 
     boolean showText = true;
 
-    /** BOX2D LIGHT STUFF */
+    /**
+     * BOX2D LIGHT STUFF
+     */
     RayHandler rayHandler;
 
     ArrayList<Light> lights = new ArrayList<Light>(BALLSNUM);
@@ -118,7 +132,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
     public void render() {
 
         /** Rotate directional light like sun :) */
-        if (lightsType == 3) {
+        if(lightsType == 3) {
             sunDirection += Gdx.graphics.getDeltaTime() * 4f;
             lights.get(0).setDirection(sunDirection);
         }
@@ -135,7 +149,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
         {
             batch.draw(bg, -viewportWidth / 2f, 0, viewportWidth, viewportHeight);
             batch.enableBlending();
-            for (int i = 0; i < BALLSNUM; i++) {
+            for(int i = 0; i < BALLSNUM; i++) {
                 Body ball = balls.get(i);
                 Vector2 position = ball.getPosition();
                 float angle = MathUtils.radiansToDegrees * ball.getAngle();
@@ -153,7 +167,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
         /** BOX2D LIGHT STUFF BEGIN */
         rayHandler.setCombinedMatrix(camera);
 
-        if (stepped) rayHandler.update();
+        if(stepped) rayHandler.update();
         rayHandler.render();
         /** BOX2D LIGHT STUFF END */
 
@@ -164,7 +178,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
         aika += System.nanoTime() - time;
 
         /** FONT */
-        if (showText) {
+        if(showText) {
             batch.setProjectionMatrix(normalProjection);
             batch.begin();
 
@@ -204,15 +218,15 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
                     Integer.toString(Gdx.graphics.getFramesPerSecond())
                             + "mouse at shadows: " + atShadow
                             + " time used for shadow calculation:"
-                            + aika / ++times + "ns" , 0, 20);
+                            + aika / ++times + "ns", 0, 20);
 
             batch.end();
         }
     }
 
     void clearLights() {
-        if (lights.size() > 0) {
-            for (Light light : lights) {
+        if(lights.size() > 0) {
+            for(Light light : lights) {
                 light.remove();
             }
             lights.clear();
@@ -222,7 +236,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
 
     void initPointLights() {
         clearLights();
-        for (int i = 0; i < BALLSNUM; i++) {
+        for(int i = 0; i < BALLSNUM; i++) {
             PointLight light = new PointLight(
                     rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 0f, 0f);
             light.attachToBody(balls.get(i), RADIUS / 2f, RADIUS / 2f);
@@ -237,7 +251,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
 
     void initConeLights() {
         clearLights();
-        for (int i = 0; i < BALLSNUM; i++) {
+        for(int i = 0; i < BALLSNUM; i++) {
             ConeLight light = new ConeLight(
                     rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE,
                     0, 0, 0f, MathUtils.random(15f, 40f));
@@ -255,7 +269,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
 
     void initChainLights() {
         clearLights();
-        for (int i = 0; i < BALLSNUM; i++) {
+        for(int i = 0; i < BALLSNUM; i++) {
             ChainLight light = new ChainLight(
                     rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 1,
                     new float[]{-5, 0, 0, 3, 5, 0});
@@ -296,11 +310,11 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
 
     private boolean fixedStep(float delta) {
         physicsTimeLeft += delta;
-        if (physicsTimeLeft > MAX_TIME_PER_FRAME)
+        if(physicsTimeLeft > MAX_TIME_PER_FRAME)
             physicsTimeLeft = MAX_TIME_PER_FRAME;
 
         boolean stepped = false;
-        while (physicsTimeLeft >= TIME_STEP) {
+        while(physicsTimeLeft >= TIME_STEP) {
             world.step(TIME_STEP, VELOCITY_ITERS, POSITION_ITERS);
             physicsTimeLeft -= TIME_STEP;
             stepped = true;
@@ -314,11 +328,11 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
 
         float halfWidth = viewportWidth / 2f;
         ChainShape chainShape = new ChainShape();
-        chainShape.createLoop(new Vector2[] {
+        chainShape.createLoop(new Vector2[]{
                 new Vector2(-halfWidth, 0f),
                 new Vector2(halfWidth, 0f),
                 new Vector2(halfWidth, viewportHeight),
-                new Vector2(-halfWidth, viewportHeight) });
+                new Vector2(-halfWidth, viewportHeight)});
         BodyDef chainBodyDef = new BodyDef();
         chainBodyDef.type = BodyType.StaticBody;
         groundBody = world.createBody(chainBodyDef);
@@ -339,11 +353,11 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
         BodyDef boxBodyDef = new BodyDef();
         boxBodyDef.type = BodyType.DynamicBody;
 
-        for (int i = 0; i < BALLSNUM; i++) {
+        for(int i = 0; i < BALLSNUM; i++) {
             // Create the BodyDef, set a random position above the
             // ground and create a new body
-            boxBodyDef.position.x = -20 + (float) (Math.random() * 40);
-            boxBodyDef.position.y = 10 + (float) (Math.random() * 15);
+            boxBodyDef.position.x = -20 + (float)(Math.random() * 40);
+            boxBodyDef.position.y = 10 + (float)(Math.random() * 15);
             Body boxBody = world.createBody(boxBodyDef);
             boxBody.createFixture(def);
             balls.add(boxBody);
@@ -359,13 +373,14 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
     QueryCallback callback = new QueryCallback() {
         @Override
         public boolean reportFixture(Fixture fixture) {
-            if (fixture.getBody() == groundBody)
+            if(fixture.getBody() == groundBody)
                 return true;
 
-            if (fixture.testPoint(testPoint.x, testPoint.y)) {
+            if(fixture.testPoint(testPoint.x, testPoint.y)) {
                 hitBody = fixture.getBody();
                 return false;
-            } else
+            }
+            else
                 return true;
         }
     };
@@ -384,7 +399,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
 
         // if we hit something we create a new mouse joint
         // and attach it to the hit body.
-        if (hitBody != null) {
+        if(hitBody != null) {
             MouseJointDef def = new MouseJointDef();
             def.bodyA = groundBody;
             def.bodyB = hitBody;
@@ -392,14 +407,16 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
             def.target.set(testPoint.x, testPoint.y);
             def.maxForce = 1000.0f * hitBody.getMass();
 
-            mouseJoint = (MouseJoint) world.createJoint(def);
+            mouseJoint = (MouseJoint)world.createJoint(def);
             hitBody.setAwake(true);
         }
 
         return false;
     }
 
-    /** another temporary vector **/
+    /**
+     * another temporary vector
+     **/
     Vector2 target = new Vector2();
 
     @Override
@@ -409,7 +426,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
         // if a mouse joint exists we simply update
         // the target of the joint based on the new
         // mouse coordinates
-        if (mouseJoint != null) {
+        if(mouseJoint != null) {
             mouseJoint.setTarget(target);
         }
         return false;
@@ -418,7 +435,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
     @Override
     public boolean touchUp(int x, int y, int pointer, int button) {
         // if a mouse joint exists we simply destroy it
-        if (mouseJoint != null) {
+        if(mouseJoint != null) {
             world.destroyJoint(mouseJoint);
             mouseJoint = null;
         }
@@ -442,38 +459,38 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
 
     @Override
     public boolean keyDown(int keycode) {
-        switch (keycode) {
+        switch(keycode) {
 
             case Input.Keys.F1:
-                if (lightsType != 0) {
+                if(lightsType != 0) {
                     initPointLights();
                     lightsType = 0;
                 }
                 return true;
 
             case Input.Keys.F2:
-                if (lightsType != 1) {
+                if(lightsType != 1) {
                     initConeLights();
                     lightsType = 1;
                 }
                 return true;
 
             case Input.Keys.F3:
-                if (lightsType != 2) {
+                if(lightsType != 2) {
                     initChainLights();
                     lightsType = 2;
                 }
                 return true;
 
             case Input.Keys.F4:
-                if (lightsType != 3) {
+                if(lightsType != 3) {
                     initDirectionalLight();
                     lightsType = 3;
                 }
                 return true;
 
             case Input.Keys.F5:
-                for (Light light : lights)
+                for(Light light : lights)
                     light.setColor(
                             MathUtils.random(),
                             MathUtils.random(),
@@ -482,7 +499,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
                 return true;
 
             case Input.Keys.F6:
-                for (Light light : lights)
+                for(Light light : lights)
                     light.setDistance(MathUtils.random(
                             LIGHT_DISTANCE * 0.5f, LIGHT_DISTANCE * 2f));
                 return true;
@@ -507,7 +524,6 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
 
             default:
                 return false;
-
         }
     }
 
@@ -520,7 +536,7 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
-        camera.rotate((float) amountY * 3f, 0, 0, 1);
+        camera.rotate((float)amountY * 3f, 0, 0, 1);
         return false;
     }
 
@@ -535,5 +551,4 @@ public class Box2dLightTest extends InputAdapter implements ApplicationListener 
     @Override
     public void resume() {
     }
-
 }

@@ -45,7 +45,7 @@ public class GameApp implements ApplicationListener {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        shapeRenderer.circle(100,100, 30);
+        shapeRenderer.circle(100, 100, 30);
         shapeRenderer.end();
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
