@@ -23,9 +23,11 @@ public class EmuApplicationWindow extends EmuWindow {
     }
 
     public void setApplicationListener(ApplicationListener applicationListener) {
-        oldListener = this.applicationListener;
-        this.applicationListener = applicationListener;
-        reset();
+        if(this.applicationListener != applicationListener) {
+            oldListener = this.applicationListener;
+            this.applicationListener = applicationListener;
+            reset();
+        }
     }
 
     @Override
