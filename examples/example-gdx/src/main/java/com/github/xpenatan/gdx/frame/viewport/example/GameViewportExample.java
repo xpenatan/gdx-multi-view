@@ -37,7 +37,7 @@ public class GameViewportExample implements ApplicationListener {
         gameFrame3 = new GameFrame(650, 20, 400, 765);
         gameFrame1.emuWindow.setApplicationListener(new Box2dLightTest());
         gameFrame2.emuWindow.setApplicationListener(new Box2dLightTest());
-		gameFrame3.emuWindow.setApplicationListener(new GameApp());
+        gameFrame3.emuWindow.setApplicationListener(new GameApp());
 
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(gameFrame1.emuWindow.getInput());
