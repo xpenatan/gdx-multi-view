@@ -1,10 +1,10 @@
 package com.github.xpenatan.gdx.frame.viewport;
 
+import com.badlogic.gdx.AbstractInput;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntSet;
 import com.badlogic.gdx.utils.IntSet.IntSetIterator;
 
@@ -17,22 +17,22 @@ import com.badlogic.gdx.utils.IntSet.IntSetIterator;
  *
  * @author xpenatan
  */
-public class EmuInput extends EmuEventQueue implements Input, Disposable {
+public class EmuInput extends AbstractInput implements InputProcessor, Disposable {
 
     private boolean enable = true;
+
+    private InputProcessor inputProcessorInternal;
     private InputProcessor processor; // the viewport/game input
     private Input gdxInput;
 
-    private boolean keyJustPressed = false;
-    private boolean[] justPressedButtons = new boolean[5];
-    private boolean[] justPressedKeys = new boolean[256];
+    private EmuEventQueue eventQueue = new EmuEventQueue();
+    private int mouseX, mouseY;
+    private int deltaX, deltaY;
     private boolean justTouched;
+    private boolean[] justPressedButtons = new boolean[5];
 
     private IntSet[] buttonPressed = new IntSet[10];
     private IntSet keyDown = new IntSet();
-    private IntSet keyPressed = new IntSet();
-    private int deltaX, deltaY;
-    private int mouseX, mouseY;
 
     private boolean releaseAtDrain;
 
@@ -60,41 +60,41 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
             buttonPressed[i] = new IntSet();
 
         // Processed when calling drain
-        InputProcessor inputProcessor = new InputProcessor() {
+        inputProcessorInternal = new InputProcessor() {
             @Override
             public boolean keyDown(int keycode) {
-                if(enable == false)
+                if(!enable)
                     return false;
 
                 keyJustPressed = true;
                 justPressedKeys[keycode] = true;
-                keyPressed.add(keycode);
+                pressedKeys[keycode] = true;
                 Gdx.graphics.requestRendering();
-                return processor != null ? processor.keyDown(keycode) : false;
+                return processor != null && processor.keyDown(keycode);
             }
 
             @Override
             public boolean keyUp(int keycode) {
-                if(enable == false)
+                if(!enable)
                     return false;
 
-                keyPressed.remove(keycode);
+                pressedKeys[keycode] = false;
                 Gdx.graphics.requestRendering();
-                return processor != null ? processor.keyUp(keycode) : false;
+                return processor != null && processor.keyUp(keycode);
             }
 
             @Override
             public boolean keyTyped(char character) {
-                if(enable == false)
+                if(!enable)
                     return false;
 
                 Gdx.graphics.requestRendering();
-                return processor != null ? processor.keyTyped(character) : false;
+                return processor != null && processor.keyTyped(character);
             }
 
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                if(enable == false)
+                if(!enable)
                     return false;
                 screenX = toWindowX(screenX);
                 screenY = toWindowY(screenY);
@@ -106,23 +106,23 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
                 justTouched = true;
                 justPressedButtons[button] = true;
                 Gdx.graphics.requestRendering();
-                return processor != null ? processor.touchDown(mouseX, mouseY, pointer, button) : false;
+                return processor != null && processor.touchDown(mouseX, mouseY, pointer, button);
             }
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                if(enable == false)
+                if(!enable)
                     return false;
 
                 buttonPressed[pointer].remove(button);
                 Gdx.graphics.requestRendering();
 
-                return processor != null ? processor.touchUp(mouseX, mouseY, pointer, button) : false;
+                return processor != null && processor.touchUp(mouseX, mouseY, pointer, button);
             }
 
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                if(enable == false)
+                if(!enable)
                     return false;
 
                 screenX = toWindowX(screenX);
@@ -134,12 +134,12 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
                 mouseY = screenY;
 
                 Gdx.graphics.requestRendering();
-                return processor != null ? processor.touchDragged(mouseX, mouseY, pointer) : false;
+                return processor != null && processor.touchDragged(mouseX, mouseY, pointer);
             }
 
             @Override
             public boolean mouseMoved(int screenX, int screenY) {
-                if(enable == false)
+                if(!enable)
                     return false;
 
                 screenX = toWindowX(screenX);
@@ -151,19 +151,18 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
                 mouseX = screenX;
                 mouseY = screenY;
                 Gdx.graphics.requestRendering();
-                return processor != null ? processor.mouseMoved(mouseX, mouseY) : false;
+                return processor != null && processor.mouseMoved(mouseX, mouseY);
             }
 
             @Override
             public boolean scrolled(float amountX, float amountY) {
-                if(enable == false)
+                if(!enable)
                     return false;
 
                 Gdx.graphics.requestRendering();
-                return processor != null ? processor.scrolled(amountX, amountY) : false;
+                return processor != null && processor.scrolled(amountX, amountY);
             }
         };
-        setProcessor(inputProcessor);
     }
 
     private int toWindowX(int screenX) {
@@ -183,9 +182,7 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
                     IntSetIterator iterator = keyDown.iterator();
                     while(iterator.hasNext) {
                         int keyDownCode = iterator.next();
-                        if(getKeyDownIndex(keyDownCode) != -1)
-                            throw new GdxRuntimeException("Index should be -1");
-                        super.keyDown(keyDownCode);
+                        eventQueue.keyDown(keyDownCode);
                     }
                 }
             }
@@ -196,26 +193,34 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
         this.viewportHeight = height;
     }
 
-    @Override
-    public void drain() {
-        justTouched = false;
+    public void processEvents() {
+        if(justTouched) {
+            justTouched = false;
+            for(int i = 0; i < justPressedButtons.length; i++) {
+                justPressedButtons[i] = false;
+            }
+        }
         if(keyJustPressed) {
             keyJustPressed = false;
-            for(int i = 0; i < justPressedKeys.length; i++)
+            for(int i = 0; i < justPressedKeys.length; i++) {
                 justPressedKeys[i] = false;
+            }
         }
-        for(int i = 0; i < justPressedButtons.length; i++)
-            justPressedButtons[i] = false;
 
-        if(releaseAtDrain)
-            releaseInput(false, false);
+        if(releaseAtDrain) {
+            releaseAtDrain = false;
+            releaseInputInternal();
+        }
         deltaX = 0;
         deltaY = 0;
-        super.drain();
+        eventQueue.drain(inputProcessorInternal);
     }
 
-    public void releaseInput(boolean releaseAtDrain, boolean drain) {
+    public void releaseInput() {
         this.releaseAtDrain = releaseAtDrain;
+    }
+
+    private void releaseInputInternal() {
         if(!releaseAtDrain) {
             justTouched = false;
             keyJustPressed = false;
@@ -232,19 +237,13 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
                 while(iterator.hasNext) {
                     int buttonKey = iterator.next();
                     iterator.remove();
-                    super.touchUp(getX(), getY(), 0, buttonKey);
+                    eventQueue.touchUp(getX(), getY(), 0, buttonKey);
                 }
             }
 
-            IntSetIterator iterator = keyPressed.iterator();
-            while(iterator.hasNext) {
-                int keyboardKey = iterator.next();
-                iterator.remove();
-                super.keyUp(keyboardKey);
+            for(int i = 0; i < pressedKeys.length; i++) {
+                pressedKeys[i] = false;
             }
-
-            if(drain)
-                super.drain();
             deltaX = 0;
             deltaY = 0;
         }
@@ -261,7 +260,9 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
             IntSet pressed = buttonPressed[i];
             pressed.clear();
         }
-        keyPressed.clear();
+        for(int i = 0; i < pressedKeys.length; i++) {
+            pressedKeys[i] = false;
+        }
         deltaX = 0;
         deltaY = 0;
         mouseX = 0;
@@ -278,7 +279,7 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
             if(rightClickFocus && button == Buttons.RIGHT)
                 needsFocus = true;
             touchDownInside.add(button);
-            return super.touchDown(screenX, screenY, pointer, button);
+            eventQueue.touchDown(screenX, screenY, pointer, button);
         }
         return false;
     }
@@ -288,7 +289,7 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
         if(!enable)
             return false;
         if(!touchDownInside.isEmpty())
-            return super.touchDragged(screenX, screenY, pointer);
+            eventQueue.touchDragged(screenX, screenY, pointer);
         return false;
     }
 
@@ -298,7 +299,7 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
             return false;
         boolean removed = touchDownInside.remove(button); // release mouse if it was pressed inside window
         if(isWindowHovered || removed) { // Fix when window is focus and goes out of focus and pass input to window. ImGui needs a least 1 frame delay to process input
-            return super.touchUp(screenX, screenY, pointer, button);
+            eventQueue.touchUp(screenX, screenY, pointer, button);
         }
         return false;
     }
@@ -308,7 +309,7 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
         if(!enable)
             return false;
         if(isWindowFocused)
-            return super.keyTyped(character);
+            eventQueue.keyTyped(character);
         return false;
     }
 
@@ -318,7 +319,7 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
             return false;
         keyDown.add(keycode);
         if(isWindowFocused)
-            return super.keyDown(keycode);
+            eventQueue.keyDown(keycode);
         return false;
     }
 
@@ -328,61 +329,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
             return false;
         keyDown.remove(keycode);
         if(isWindowFocused)
-            return super.keyUp(keycode);
+            eventQueue.keyUp(keycode);
         return false;
-    }
-
-    private int getKeyDownIndex(int keycode) {
-        int[] q = queue.items;
-        for(int i = 0; i < queue.size; ) {
-            int type = q[i++];
-            int index = i - 1;
-            float currentEwventTime = (long)q[i++] << 32 | q[i++] & 0xFFFFFFFFL;
-            switch(type) {
-                case SKIP:
-                    i += q[i];
-                    break;
-                case KEY_DOWN:
-                    int key = q[i++];
-                    if(key == keycode) {
-                        return index;
-                    }
-                    break;
-                case KEY_UP:
-                    i++;
-                    break;
-                case KEY_TYPED:
-                    i++;
-                    break;
-                case TOUCH_DOWN:
-                    i++;
-                    i++;
-                    i++;
-                    i++;
-                    break;
-                case TOUCH_UP:
-                    i++;
-                    i++;
-                    i++;
-                    i++;
-                    break;
-                case TOUCH_DRAGGED:
-                    i++;
-                    i++;
-                    i++;
-                    break;
-                case MOUSE_MOVED:
-                    i++;
-                    i++;
-                    break;
-                case SCROLLED:
-                    i++;
-                    break;
-                default:
-                    throw new RuntimeException();
-            }
-        }
-        return -1;
     }
 
     @Override
@@ -390,7 +338,7 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
         if(!enable)
             return false;
         if(isWindowFocused) {
-            return super.mouseMoved(screenX, screenY);
+            eventQueue.mouseMoved(screenX, screenY);
         }
         return false;
     }
@@ -400,7 +348,7 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
         if(!enable)
             return false;
         if(isWindowFocused && isWindowHovered)
-            return super.scrolled(amountX, amountY);
+            eventQueue.scrolled(amountX, amountY);
         return false;
     }
 
@@ -491,24 +439,6 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
         if(!enable)
             return false;
         return justPressedButtons[button];
-    }
-
-    @Override
-    public boolean isKeyPressed(int key) {
-        if(!enable)
-            return false;
-        return keyPressed.contains(key);
-    }
-
-    @Override
-    public boolean isKeyJustPressed(int key) {
-        if(!enable)
-            return false;
-        if(key < 0 || key > 256)
-            return false;
-        if(key == Keys.ANY_KEY)
-            return keyJustPressed;
-        return justPressedKeys[key];
     }
 
     @Override
@@ -612,27 +542,8 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
     }
 
     @Override
-    public void setCatchBackKey(boolean catchBack) {
-        gdxInput.setCatchBackKey(catchBack);
-    }
-
-    @Override
-    public boolean isCatchBackKey() {
-        if(!enable)
-            return false;
-        return gdxInput.isCatchBackKey();
-    }
-
-    @Override
-    public void setCatchMenuKey(boolean catchMenu) {
-        gdxInput.setCatchMenuKey(catchMenu);
-    }
-
-    @Override
-    public boolean isCatchMenuKey() {
-        if(!enable)
-            return false;
-        return gdxInput.isCatchBackKey();
+    public long getCurrentEventTime() {
+        return 0;
     }
 
     @Override
@@ -675,15 +586,6 @@ public class EmuInput extends EmuEventQueue implements Input, Disposable {
     @Override
     public void setCursorPosition(int x, int y) {
         gdxInput.setCursorPosition(x, y);
-    }
-
-    @Override
-    public void setCatchKey(int keycode, boolean catchKey) {
-    }
-
-    @Override
-    public boolean isCatchKey(int keycode) {
-        return false;
     }
 
     @Override

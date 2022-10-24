@@ -1,64 +1,30 @@
-/*******************************************************************************
- * Copyright 2011 See AUTHORS file.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
-
 package com.github.xpenatan.gdx.frame.viewport;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.Null;
+import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 
-/**
- * Queues events that are later passed to the wrapped {@link InputProcessor}.
- * <p>
- * EDIT - Cloned from original to change private variables to protected
- *
- * @author Nathan Sweet
- */
 public class EmuEventQueue implements InputProcessor {
-    static protected final int SKIP = -1;
-    static protected final int KEY_DOWN = 0;
-    static protected final int KEY_UP = 1;
-    static protected final int KEY_TYPED = 2;
-    static protected final int TOUCH_DOWN = 3;
-    static protected final int TOUCH_UP = 4;
-    static protected final int TOUCH_DRAGGED = 5;
-    static protected final int MOUSE_MOVED = 6;
-    static protected final int SCROLLED = 7;
+    static private final int SKIP = -1;
+    static private final int KEY_DOWN = 0;
+    static private final int KEY_UP = 1;
+    static private final int KEY_TYPED = 2;
+    static private final int TOUCH_DOWN = 3;
+    static private final int TOUCH_UP = 4;
+    static private final int TOUCH_DRAGGED = 5;
+    static private final int MOUSE_MOVED = 6;
+    static private final int SCROLLED = 7;
 
-    private InputProcessor processor;
-    protected final IntArray queue = new IntArray();
+    private final IntArray queue = new IntArray();
     private final IntArray processingQueue = new IntArray();
     private long currentEventTime;
 
     public EmuEventQueue() {
     }
 
-    public EmuEventQueue(InputProcessor processor) {
-        this.processor = processor;
-    }
-
-    public void setProcessor(InputProcessor processor) {
-        this.processor = processor;
-    }
-
-    public InputProcessor getProcessor() {
-        return processor;
-    }
-
-    public void drain() {
+    public void drain(@Null InputProcessor processor) {
         synchronized(this) {
             if(processor == null) {
                 queue.clear();
@@ -68,7 +34,6 @@ public class EmuEventQueue implements InputProcessor {
             queue.clear();
         }
         int[] q = processingQueue.items;
-        InputProcessor localProcessor = processor;
         for(int i = 0, n = processingQueue.size; i < n; ) {
             int type = q[i++];
             currentEventTime = (long)q[i++] << 32 | q[i++] & 0xFFFFFFFFL;
@@ -77,28 +42,28 @@ public class EmuEventQueue implements InputProcessor {
                     i += q[i];
                     break;
                 case KEY_DOWN:
-                    localProcessor.keyDown(q[i++]);
+                    processor.keyDown(q[i++]);
                     break;
                 case KEY_UP:
-                    localProcessor.keyUp(q[i++]);
+                    processor.keyUp(q[i++]);
                     break;
                 case KEY_TYPED:
-                    localProcessor.keyTyped((char)q[i++]);
+                    processor.keyTyped((char)q[i++]);
                     break;
                 case TOUCH_DOWN:
-                    localProcessor.touchDown(q[i++], q[i++], q[i++], q[i++]);
+                    processor.touchDown(q[i++], q[i++], q[i++], q[i++]);
                     break;
                 case TOUCH_UP:
-                    localProcessor.touchUp(q[i++], q[i++], q[i++], q[i++]);
+                    processor.touchUp(q[i++], q[i++], q[i++], q[i++]);
                     break;
                 case TOUCH_DRAGGED:
-                    localProcessor.touchDragged(q[i++], q[i++], q[i++]);
+                    processor.touchDragged(q[i++], q[i++], q[i++]);
                     break;
                 case MOUSE_MOVED:
-                    localProcessor.mouseMoved(q[i++], q[i++]);
+                    processor.mouseMoved(q[i++], q[i++]);
                     break;
                 case SCROLLED:
-                    localProcessor.scrolled(0, q[i++]);
+                    processor.scrolled(NumberUtils.intBitsToFloat(q[i++]), NumberUtils.intBitsToFloat(q[i++]));
                     break;
                 default:
                     throw new RuntimeException();
@@ -139,7 +104,7 @@ public class EmuEventQueue implements InputProcessor {
                     i += 2;
                     break;
                 case SCROLLED:
-                    i++;
+                    i += 2;
                     break;
                 default:
                     throw new RuntimeException();
@@ -228,7 +193,8 @@ public class EmuEventQueue implements InputProcessor {
     public synchronized boolean scrolled(float amountX, float amountY) {
         queue.add(SCROLLED);
         queueTime();
-        queue.add((int)amountY);
+        queue.add(NumberUtils.floatToIntBits(amountX));
+        queue.add(NumberUtils.floatToIntBits(amountY));
         return false;
     }
 

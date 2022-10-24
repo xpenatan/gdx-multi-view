@@ -173,7 +173,7 @@ public abstract class EmuWindow {
         setProcessInput(isWindowFocused);
         if(!isWindowFocused && !inputReleased) {
             inputReleased = true;
-            getInput().releaseInput(false, true);
+            getInput().releaseInput();
         }
     }
 
@@ -200,7 +200,7 @@ public abstract class EmuWindow {
         }
         emuGraphics.update();
         if(processInput)
-            emuInput.drain();
+            emuInput.processEvents();
     }
 
     public void setProcessInput(boolean flag) {
