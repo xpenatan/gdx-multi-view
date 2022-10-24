@@ -24,6 +24,7 @@ public class GameViewportExample implements ApplicationListener {
 
     private GameFrame gameFrame1;
     private GameFrame gameFrame2;
+    private GameFrame gameFrame3;
 
     @Override
     public void create() {
@@ -31,15 +32,17 @@ public class GameViewportExample implements ApplicationListener {
         camera.setToOrtho(true);
         batch = new SpriteBatch();
 
-        gameFrame1 = new GameFrame(20, 10, 800, 350);
-        gameFrame2 = new GameFrame(20, 400, 800, 350);
+        gameFrame1 = new GameFrame(20, 20, 600, 375);
+        gameFrame2 = new GameFrame(20, 410, 600, 375);
+        gameFrame3 = new GameFrame(650, 20, 400, 765);
         gameFrame1.emuWindow.setApplicationListener(new Box2dLightTest());
         gameFrame2.emuWindow.setApplicationListener(new Box2dLightTest());
-//		gameFrame2.emuWindow.setApplicationListener(new GameApp());
+		gameFrame3.emuWindow.setApplicationListener(new GameApp());
 
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(gameFrame1.emuWindow.getInput());
         multiplexer.addProcessor(gameFrame2.emuWindow.getInput());
+        multiplexer.addProcessor(gameFrame3.emuWindow.getInput());
         Gdx.input.setInputProcessor(multiplexer);
     }
 
@@ -52,11 +55,13 @@ public class GameViewportExample implements ApplicationListener {
 
         gameFrame1.update();
         gameFrame2.update();
+        gameFrame3.update();
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         gameFrame1.draw(batch);
         gameFrame2.draw(batch);
+        gameFrame3.draw(batch);
         batch.end();
     }
 
