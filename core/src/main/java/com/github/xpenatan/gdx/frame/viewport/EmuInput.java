@@ -45,15 +45,9 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     private int viewportHeight;
 
     private boolean needsFocus;
-    private boolean rightClickFocus = false;
 
     public EmuInput(Input gdxInput) {
-        this(gdxInput, false);
-    }
-
-    public EmuInput(Input gdxInput, boolean rightClickFocus) {
         super();
-        this.rightClickFocus = rightClickFocus;
         this.gdxInput = gdxInput;
 
         for(int i = 0; i < 10; i++)
@@ -275,11 +269,10 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(!enable)
             return false;
-        if(isWindowHovered) { // Fix when window is focus and goes out of focus and pass input to window. ImGui needs a least 1 frame delay to process input
-            if(rightClickFocus && button == Buttons.RIGHT)
-                needsFocus = true;
+        if(isWindowFocused && isWindowHovered || isWindowHovered && button == Buttons.LEFT) { // Fix when window is focus and goes out of focus and pass input to window. ImGui needs a least 1 frame delay to process input
             touchDownInside.add(button);
             eventQueue.touchDown(screenX, screenY, pointer, button);
+            return true;
         }
         return false;
     }
@@ -288,8 +281,10 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if(!enable)
             return false;
-        if(!touchDownInside.isEmpty())
+        if(isWindowFocused && !touchDownInside.isEmpty()) {
             eventQueue.touchDragged(screenX, screenY, pointer);
+            return true;
+        }
         return false;
     }
 
@@ -298,8 +293,9 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
         if(!enable)
             return false;
         boolean removed = touchDownInside.remove(button); // release mouse if it was pressed inside window
-        if(isWindowHovered || removed) { // Fix when window is focus and goes out of focus and pass input to window. ImGui needs a least 1 frame delay to process input
+        if((isWindowFocused && isWindowHovered) || removed) { // Fix when window is focus and goes out of focus and pass input to window. ImGui needs a least 1 frame delay to process input
             eventQueue.touchUp(screenX, screenY, pointer, button);
+            return true;
         }
         return false;
     }
@@ -308,8 +304,10 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     public boolean keyTyped(char character) {
         if(!enable)
             return false;
-        if(isWindowFocused)
+        if(isWindowFocused) {
             eventQueue.keyTyped(character);
+            return true;
+        }
         return false;
     }
 
@@ -318,8 +316,10 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
         if(!enable)
             return false;
         keyDown.add(keycode);
-        if(isWindowFocused)
+        if(isWindowFocused) {
             eventQueue.keyDown(keycode);
+            return true;
+        }
         return false;
     }
 
@@ -328,8 +328,10 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
         if(!enable)
             return false;
         keyDown.remove(keycode);
-        if(isWindowFocused)
+        if(isWindowFocused) {
             eventQueue.keyUp(keycode);
+            return true;
+        }
         return false;
     }
 
@@ -339,6 +341,7 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
             return false;
         if(isWindowFocused) {
             eventQueue.mouseMoved(screenX, screenY);
+            return true;
         }
         return false;
     }
@@ -347,8 +350,10 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     public boolean scrolled(float amountX, float amountY) {
         if(!enable)
             return false;
-        if(isWindowFocused && isWindowHovered)
+        if(isWindowFocused && isWindowHovered) {
             eventQueue.scrolled(amountX, amountY);
+            return true;
+        }
         return false;
     }
 
