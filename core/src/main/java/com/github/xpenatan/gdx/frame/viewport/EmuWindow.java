@@ -62,7 +62,11 @@ public abstract class EmuWindow {
     private boolean reset;
 
     public EmuWindow() {
-        this(new EmuInput(Gdx.input));
+        this(true);
+    }
+
+    public EmuWindow(boolean rightClickFocus) {
+        this(new EmuInput(Gdx.input, rightClickFocus));
     }
 
     public EmuWindow(EmuInput input) {

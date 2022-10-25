@@ -45,9 +45,15 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     private int viewportHeight;
 
     private boolean needsFocus;
+    private boolean rightClickFocus = false;
 
     public EmuInput(Input gdxInput) {
+        this(gdxInput, true);
+    }
+
+    public EmuInput(Input gdxInput, boolean rightClickFocus) {
         super();
+        this.rightClickFocus = rightClickFocus;
         this.gdxInput = gdxInput;
 
         for(int i = 0; i < 10; i++)
@@ -269,7 +275,10 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(!enable)
             return false;
-        if(isWindowFocused && isWindowHovered || isWindowHovered && button == Buttons.LEFT) { // Fix when window is focus and goes out of focus and pass input to window. ImGui needs a least 1 frame delay to process input
+        if(isWindowFocused && isWindowHovered || (isWindowHovered && button == Buttons.LEFT || isWindowHovered && rightClickFocus && button == Buttons.RIGHT)) { // Fix when window is focus and goes out of focus and pass input to window. ImGui needs a least 1 frame delay to process input
+            if(rightClickFocus && button == Buttons.RIGHT)
+                needsFocus = true;
+
             touchDownInside.add(button);
             eventQueue.touchDown(screenX, screenY, pointer, button);
             return true;

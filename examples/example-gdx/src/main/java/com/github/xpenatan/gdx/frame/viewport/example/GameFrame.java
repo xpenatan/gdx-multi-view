@@ -27,7 +27,7 @@ public class GameFrame {
     public void update() {
         Rectangle.tmp.set(windowX, windowY, windowWidth, windowHeight);
         isWindowHovered = Rectangle.tmp.contains(Gdx.input.getX(), Gdx.input.getY());
-        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))
+        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) || Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT))
             isWindowFocused = Rectangle.tmp.contains(Gdx.input.getX(), Gdx.input.getY());
         emuWindow.begin(isWindowFocused, isWindowHovered, windowX, windowY, windowWidth, windowHeight);
         emuWindow.loop();
