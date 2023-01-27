@@ -27,14 +27,16 @@ public class EmuApplicationWindow extends EmuWindow {
             oldListener = this.applicationListener;
             this.applicationListener = applicationListener;
             reset();
+            created = false; // Old listener will dispose and the new listener won't.
         }
     }
 
     @Override
     protected void onCreate() {
-        created = true;
-        if(applicationListener != null)
+        if(applicationListener != null) {
+            created = true;
             applicationListener.create();
+        }
     }
 
     @Override
