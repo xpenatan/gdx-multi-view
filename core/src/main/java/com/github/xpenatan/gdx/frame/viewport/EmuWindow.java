@@ -79,10 +79,6 @@ public abstract class EmuWindow {
         frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 2560, 1080, true);
     }
 
-    public EmuInput getInput() {
-        return emuInput;
-    }
-
     public boolean begin(boolean isWindowFocused, boolean isWindowHovered, int windowX, int windowY, int windowWidth, int windowHeight) {
         if(begin == false) {
             begin = true;
@@ -181,7 +177,7 @@ public abstract class EmuWindow {
         setProcessInput(isWindowFocused);
         if(!isWindowFocused && !inputReleased) {
             inputReleased = true;
-            getInput().releaseInput();
+            getEmuInput().releaseInput();
         }
     }
 

@@ -40,9 +40,9 @@ public class GameViewportExample implements ApplicationListener {
         gameFrame3.emuWindow.setApplicationListener(new GameApp());
 
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(gameFrame1.emuWindow.getInput());
-        multiplexer.addProcessor(gameFrame2.emuWindow.getInput());
-        multiplexer.addProcessor(gameFrame3.emuWindow.getInput());
+        multiplexer.addProcessor(gameFrame1.emuWindow.getEmuInput());
+        multiplexer.addProcessor(gameFrame2.emuWindow.getEmuInput());
+        multiplexer.addProcessor(gameFrame3.emuWindow.getEmuInput());
         Gdx.input.setInputProcessor(multiplexer);
     }
 
