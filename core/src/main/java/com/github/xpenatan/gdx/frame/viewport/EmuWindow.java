@@ -1,5 +1,6 @@
 package com.github.xpenatan.gdx.frame.viewport;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
@@ -27,10 +28,12 @@ public abstract class EmuWindow {
     private Input gdxInput;
     private GL20 gdxGL20;
     private GL30 gdxGL30;
+    private Files gdxFiles;
 
     private EmuGraphics emuGraphics;
     private EmuInput emuInput;
     private EmuGL20 emuGL20;
+    private EmuFiles emuFiles;
 
     private boolean disposed;
     private boolean initialized = false;
@@ -47,11 +50,8 @@ public abstract class EmuWindow {
     private int windowHeight;
 
     public float u;
-    ;
     public float v;
-    ;
     public float u2;
-    ;
     public float v2;
 
     private boolean inputReleased = false;
@@ -74,6 +74,7 @@ public abstract class EmuWindow {
             throw new GdxRuntimeException("Input cannot be null");
         this.emuGraphics = new EmuGraphics(this, Gdx.graphics);
         this.emuInput = input;
+        this.emuFiles = new EmuFiles(Gdx.files);
         this.emuGL20 = Gdx.gl30 != null ? new EmuGL30(Gdx.gl30) : new EmuGL20(Gdx.gl20);
         frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 2560, 1080, true);
     }
@@ -101,8 +102,10 @@ public abstract class EmuWindow {
             gdxInput = Gdx.input;
             gdxGL20 = Gdx.gl20;
             gdxGL30 = Gdx.gl30;
+            gdxFiles = Gdx.files;
             Gdx.graphics = emuGraphics;
             Gdx.input = emuInput;
+            Gdx.files = emuFiles;
 
             if(gdxGL30 != null)
                 Gdx.gl30 = (GL30)emuGL20;
@@ -124,6 +127,7 @@ public abstract class EmuWindow {
             Gdx.gl = gdxGL30 != null ? gdxGL30 : gdxGL20;
             Gdx.gl20 = gdxGL20;
             Gdx.gl30 = gdxGL30;
+            Gdx.files = gdxFiles;
 
             EmuFrameBuffer.setDefaultFramebufferHandle(defaultHandler);
             FrameBuffer.unbind();
@@ -216,6 +220,14 @@ public abstract class EmuWindow {
             this.resume = toResume;
             resumeStateChanged = true;
         }
+    }
+
+    public EmuFiles getEmuFiles() {
+        return emuFiles;
+    }
+
+    public EmuInput getEmuInput() {
+        return emuInput;
     }
 
     public void dispose() {
