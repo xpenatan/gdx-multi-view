@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.GL31;
+import com.badlogic.gdx.graphics.GL32;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.GLVersion;
 import com.badlogic.gdx.utils.Disposable;
@@ -80,6 +82,16 @@ public class EmuGraphics implements Graphics, Disposable {
     }
 
     @Override
+    public boolean isGL31Available() {
+        return gdxGraphics.isGL31Available();
+    }
+
+    @Override
+    public boolean isGL32Available() {
+        return gdxGraphics.isGL32Available();
+    }
+
+    @Override
     public GL20 getGL20() {
         return gdxGraphics.getGL20();
     }
@@ -90,6 +102,16 @@ public class EmuGraphics implements Graphics, Disposable {
     }
 
     @Override
+    public GL31 getGL31() {
+        return gdxGraphics.getGL31();
+    }
+
+    @Override
+    public GL32 getGL32() {
+        return gdxGraphics.getGL32();
+    }
+
+    @Override
     public void setGL20(GL20 gl20) {
         gdxGraphics.setGL20(gl20);
     }
@@ -97,6 +119,16 @@ public class EmuGraphics implements Graphics, Disposable {
     @Override
     public void setGL30(GL30 gl30) {
         gdxGraphics.setGL30(gl30);
+    }
+
+    @Override
+    public void setGL31(GL31 gl31) {
+        gdxGraphics.setGL31(gl31);
+    }
+
+    @Override
+    public void setGL32(GL32 gl32) {
+        gdxGraphics.setGL32(gl32);
     }
 
     @Override

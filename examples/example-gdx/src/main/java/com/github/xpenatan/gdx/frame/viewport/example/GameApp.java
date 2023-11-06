@@ -49,12 +49,13 @@ public class GameApp implements ApplicationListener {
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
+                System.out.println("touchUp 01: " + screenY + ", " + screenY + " button: " + button);
                 return false;
             }
 
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                System.out.println("touchDown 01: " + screenY + ", " + screenY + " button: " + button);
                 if(button == Input.Buttons.LEFT) {
                     camera.unproject(TMP_VEC01.set(screenX, screenY, 0));
                     x1 = TMP_VEC01.x;
@@ -68,9 +69,16 @@ public class GameApp implements ApplicationListener {
         input02.addProcessor(new InputAdapter() {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                System.out.println("touchUp 02: " + screenY + ", " + screenY + " button: " + button);
                 camera.unproject(TMP_VEC01.set(screenX, screenY, 0));
                 x2 = TMP_VEC01.x;
                 y2 = TMP_VEC01.y;
+                return false;
+            }
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                System.out.println("touchDown 02: " + screenY + ", " + screenY + " button: " + button);
                 return false;
             }
         });

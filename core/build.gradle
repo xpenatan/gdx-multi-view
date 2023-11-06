@@ -4,7 +4,7 @@ plugins {
 
 apply from: '../dependencies.gradle'
 
-def lib_name = "gdx-frame-viewport"
+def lib_name = "gdx-multi-view"
 
 dependencies {
     implementation "com.badlogicgames.gdx:gdx:$project.gdxVersion"

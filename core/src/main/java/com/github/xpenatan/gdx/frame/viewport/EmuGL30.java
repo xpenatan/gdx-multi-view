@@ -33,6 +33,11 @@ public class EmuGL30 extends EmuGL20<GL30> implements GL30 {
     }
 
     @Override
+    public void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, int offset) {
+        gdxGL.glTexImage2D(target, level, internalformat, width, height, border, format, type, offset);
+    }
+
+    @Override
     public void glTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int format, int type, Buffer pixels) {
         gdxGL.glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, pixels);
     }
@@ -40,6 +45,11 @@ public class EmuGL30 extends EmuGL20<GL30> implements GL30 {
     @Override
     public void glTexImage3D(int target, int level, int internalformat, int width, int height, int depth, int border, int format, int type, int offset) {
         gdxGL.glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, offset);
+    }
+
+    @Override
+    public void glTexSubImage2D(int target, int level, int xoffset, int yoffset, int width, int height, int format, int type, int offset) {
+        gdxGL.glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, offset);
     }
 
     @Override

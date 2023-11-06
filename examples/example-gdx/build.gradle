@@ -8,7 +8,6 @@ apply from: '../../dependencies.gradle'
 dependencies {
     implementation "com.badlogicgames.gdx:gdx-platform:$project.gdxVersion:natives-desktop"
     implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$project.gdxVersion"
-//    implementation "com.github.xpenatan:gdx-frame-viewport:$project.gdxFrameViewportVersion"
     implementation project(":core")
 
     implementation "com.badlogicgames.box2dlights:box2dlights:1.4"

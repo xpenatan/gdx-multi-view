@@ -9,8 +9,6 @@ import com.badlogic.gdx.utils.IntSet;
 import com.badlogic.gdx.utils.IntSet.IntSetIterator;
 
 /**
- * This class was originally from XpeEngine and its now public. <br><br>
- * <p>
  * Class to emulate input when its touched inside a viewport. <br>
  * ViewportX/Y needs to be updated so mouse position is converted correctly to the rendering scene. <br>
  * Needs to call drain to process events.
@@ -118,6 +116,17 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
                 Gdx.graphics.requestRendering();
 
                 return processor != null && processor.touchUp(mouseX, mouseY, pointer, button);
+            }
+
+            @Override
+            public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+                if(!enable)
+                    return false;
+
+                screenX = toWindowX(screenX);
+                screenY = toWindowY(screenY);
+
+                return false;
             }
 
             @Override
@@ -306,6 +315,11 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
             eventQueue.touchUp(screenX, screenY, pointer, button);
             return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
         return false;
     }
 
@@ -526,13 +540,18 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     }
 
     @Override
-    public void vibrate(long[] pattern, int repeat) {
-        gdxInput.vibrate(pattern, repeat);
+    public void vibrate(int milliseconds, boolean fallback) {
+        gdxInput.vibrate(milliseconds, fallback);
     }
 
     @Override
-    public void cancelVibrate() {
-        gdxInput.cancelVibrate();
+    public void vibrate(int milliseconds, int amplitude, boolean fallback) {
+        gdxInput.vibrate(milliseconds, amplitude, fallback);
+    }
+
+    @Override
+    public void vibrate(VibrationType vibrationType) {
+        gdxInput.vibrate(vibrationType);
     }
 
     @Override
