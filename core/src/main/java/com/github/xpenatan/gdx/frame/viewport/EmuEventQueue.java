@@ -1,13 +1,8 @@
 package com.github.xpenatan.gdx.frame.viewport;
 
-import com.badlogic.gdx.InputEventQueue;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.Null;
-import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class EmuEventQueue extends InputEventQueue {
+public class EmuEventQueue extends CustomEventQueue {
 
     public EmuEventQueue() {
     }
@@ -46,5 +41,15 @@ public class EmuEventQueue extends InputEventQueue {
 
     public synchronized boolean scrolled(float amountX, float amountY) {
         return scrolled(amountX, amountY, getTime());
+    }
+
+    public synchronized boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        queue.add(TOUCH_CANCELED);
+        queueTime(getTime());
+        queue.add(screenX);
+        queue.add(screenY);
+        queue.add(pointer);
+        queue.add(button);
+        return false;
     }
 }

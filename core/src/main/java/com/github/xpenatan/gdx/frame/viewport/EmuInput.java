@@ -26,6 +26,7 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     private EmuEventQueue eventQueue = new EmuEventQueue();
     private int mouseX, mouseY;
     private int deltaX, deltaY;
+    private float scrollX, scrollY;
     private boolean justTouched;
     private boolean[] justPressedButtons = new boolean[5];
 
@@ -126,7 +127,14 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
                 screenX = toWindowX(screenX);
                 screenY = toWindowY(screenY);
 
-                return false;
+                deltaX = screenX - mouseX;
+                deltaY = screenY - mouseY;
+                mouseX = screenX;
+                mouseY = screenY;
+
+                Gdx.graphics.requestRendering();
+
+                return processor != null && processor.touchCancelled(mouseX, mouseY, pointer, button);
             }
 
             @Override
@@ -168,6 +176,9 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
                 if(!enable)
                     return false;
 
+                scrollX = amountX;
+                scrollY = amountY;
+
                 Gdx.graphics.requestRendering();
                 return processor != null && processor.scrolled(amountX, amountY);
             }
@@ -203,6 +214,9 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     }
 
     public void processEvents() {
+        scrollX = 0;
+        scrollY = 0;
+
         if(justTouched) {
             justTouched = false;
             for(int i = 0; i < justPressedButtons.length; i++) {
@@ -226,7 +240,7 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     }
 
     public void releaseInput() {
-        this.releaseAtDrain = releaseAtDrain;
+        this.releaseAtDrain = true;
     }
 
     private void releaseInputInternal() {
@@ -280,6 +294,22 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
         touchDownInside.clear();
     }
 
+    public int getViewportWidth() {
+        return viewportWidth;
+    }
+
+    public int getViewportHeight() {
+        return viewportHeight;
+    }
+
+    public float getScrollX() {
+        return scrollX;
+    }
+
+    public float getScrollY() {
+        return scrollY;
+    }
+
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(!enable)
@@ -320,7 +350,12 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
 
     @Override
     public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
-        return false;
+        if(!enable)
+            return false;
+
+        // Need testing. Since its canceling I guess this cannot have isWindowFocused or isWindowHovered
+        eventQueue.touchCancelled(screenX, screenY, pointer, button);
+        return true;
     }
 
     @Override
@@ -576,7 +611,7 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
 
     @Override
     public long getCurrentEventTime() {
-        return 0;
+        return eventQueue.getCurrentEventTime();
     }
 
     @Override
