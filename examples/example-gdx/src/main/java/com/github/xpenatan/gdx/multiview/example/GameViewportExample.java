@@ -1,4 +1,4 @@
-package com.github.xpenatan.gdx.frame.viewport.example;
+package com.github.xpenatan.gdx.multiview.example;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;

@@ -16,7 +16,7 @@ dependencies {
 }
 
 ext {
-    mainTestClass = "com.github.xpenatan.gdx.frame.viewport.example.GameViewportExample"
+    mainTestClass = "com.github.xpenatan.gdx.multiview.example.GameViewportExample"
 }
 
 sourceSets.main.java.srcDirs = [ "src/main/java/" ]

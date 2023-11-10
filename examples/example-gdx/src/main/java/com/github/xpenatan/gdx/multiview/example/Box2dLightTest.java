@@ -1,4 +1,4 @@
-package com.github.xpenatan.gdx.frame.viewport.example;
+package com.github.xpenatan.gdx.multiview.example;
 
 import box2dLight.ChainLight;
 import box2dLight.ConeLight;

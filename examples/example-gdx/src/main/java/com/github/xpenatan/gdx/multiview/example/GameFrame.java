@@ -1,11 +1,11 @@
-package com.github.xpenatan.gdx.frame.viewport.example;
+package com.github.xpenatan.gdx.multiview.example;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.github.xpenatan.gdx.frame.viewport.EmuApplicationWindow;
+import com.github.xpenatan.gdx.multiview.EmuApplicationWindow;
 
 public class GameFrame {
     private int windowX;

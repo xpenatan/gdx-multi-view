@@ -1,4 +1,4 @@
-package com.github.xpenatan.gdx.frame.viewport;
+package com.github.xpenatan.gdx.multiview;
 
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
