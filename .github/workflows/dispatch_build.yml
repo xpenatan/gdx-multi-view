@@ -1,0 +1,16 @@
+name: Dispatch Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      isRelease:
+        required: true
+        description: "Release or Snapshot"
+        type: boolean
+jobs:
+  build-and-upload:
+    uses: ./.github/workflows/build_and_upload.yml
+    with:
+      isRelease: ${{ inputs.isRelease }}
+      shouldUpload: true
+    secrets: inherit
