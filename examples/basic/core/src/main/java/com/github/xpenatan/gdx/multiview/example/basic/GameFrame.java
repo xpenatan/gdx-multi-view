@@ -1,4 +1,4 @@
-package com.github.xpenatan.gdx.multiview.example;
+package com.github.xpenatan.gdx.multiview.example.basic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

@@ -1,5 +1,5 @@
 object LibExt {
-    const val groupId = "com.github.xpenatan"
+    const val groupId = "com.github.xpenatan.gdx-multiview"
     val libVersion: String = getVersion("1.0.0", "b1")
     const val gdxVersion = "1.12.1"
 }

@@ -1,4 +1,0 @@
-project.ext {
-    gdxVersion = "1.12.1"
-    gdxFrameViewportVersion = "1.0.0-SNAPSHOT"
-}

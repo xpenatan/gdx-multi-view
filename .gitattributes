@@ -1,1 +1,15 @@
-* text=false
+* text eol=lf
+
+# Binary files.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.jar binary
+*.ttf binary
+*.js binary
+*.wasm binary
+*.blend binary
+*.blend1 binary
+*.fbx binary
+*.bin binary
+*.g3db binary
