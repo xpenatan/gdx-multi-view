@@ -33,6 +33,7 @@ subprojects {
 
 var libProjects = mutableSetOf(
     project(":multiview:core"),
+    project(":extensions:imgui-window"),
 )
 
 configure(libProjects) {
