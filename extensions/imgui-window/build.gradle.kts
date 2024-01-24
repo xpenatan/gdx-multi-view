@@ -4,7 +4,6 @@ dependencies {
     implementation(project(":multiview:core"))
 
     implementation("com.badlogicgames.gdx:gdx:${LibExt.gdxVersion}")
-    implementation("com.github.xpenatan.gdx-imgui:gdx-impl:${LibExt.gdxImguiVersion}")
     implementation("com.github.xpenatan.gdx-imgui:imgui-ext-core:${LibExt.gdxImguiVersion}")
 }
 

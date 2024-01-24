@@ -3,7 +3,6 @@ package com.github.xpenatan.imgui.example.viewport;
 import com.badlogic.gdx.Gdx;
 import com.github.xpenatan.gdx.multiview.EmuApplicationWindow;
 import com.github.xpenatan.gdx.multiview.EmuInput;
-import com.github.xpenatan.imgui.gdx.ImGuiGdxImpl;
 import com.github.xpenatan.imgui.gdx.frame.viewport.ImGuiGdxFrameWindow;
 import imgui.ImGui;
 import imgui.ImGuiConfigFlags;
@@ -14,8 +13,6 @@ public class MainApp extends ImGuiRenderer {
 
     ImGuiGdxFrameWindow gameWindow1;
     ImGuiGdxFrameWindow gameWindow2;
-
-    ImGuiGdxImpl impl;
 
     @Override
     public void show() {
