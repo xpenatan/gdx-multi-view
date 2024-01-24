@@ -25,10 +25,10 @@ subprojects {
         maven { url = uri("https://jitpack.io") }
     }
 
-//    configurations.configureEach {
-//        // Check for updates every sync
-//        resolutionStrategy.cacheChangingModulesFor(0, "seconds")
-//    }
+    configurations.configureEach {
+        // Check for updates every sync
+        resolutionStrategy.cacheChangingModulesFor(0, "seconds")
+    }
 }
 
 var libProjects = mutableSetOf(
