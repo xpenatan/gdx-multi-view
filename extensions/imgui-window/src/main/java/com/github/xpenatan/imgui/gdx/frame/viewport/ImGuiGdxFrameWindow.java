@@ -86,13 +86,13 @@ public class ImGuiGdxFrameWindow {
             ImGui.PopStyleColor();
         boolean beginChild = ImGui.BeginChild(beginID, ImVec2.TMP_1.set(0, -ImGui.GetFrameHeightWithSpacing()), false, ImGuiWindowFlags.ImGuiWindowFlags_NoMove);
         if(beginChild) {
-            float GetWindowContentRegionWidth = ImGui.GetWindowContentRegionMax().get_x() - ImGui.GetWindowContentRegionMin().get_x();
+            float GetWindowContentRegionWidth = ImGui.GetWindowContentRegionMax().x() - ImGui.GetWindowContentRegionMin().x();
             windowWidth = (int)GetWindowContentRegionWidth;
             windowHeight = (int)ImGui.GetWindowHeight();
 
             ImVec2 winPos = ImGui.GetWindowPos();
-            windowX = (int)winPos.get_x();
-            windowY = (int)winPos.get_y();
+            windowX = (int)winPos.x();
+            windowY = (int)winPos.y();
 
             if(input.needsFocus())
                 ImGui.SetWindowFocus();
