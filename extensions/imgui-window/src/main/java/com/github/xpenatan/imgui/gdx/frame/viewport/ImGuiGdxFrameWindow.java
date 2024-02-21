@@ -84,7 +84,7 @@ public class ImGuiGdxFrameWindow {
         ImGui.Begin(name);
         if(curFrameFocus)
             ImGui.PopStyleColor();
-        boolean beginChild = ImGui.BeginChild(beginID, ImVec2.TMP_1.set(0, -ImGui.GetFrameHeightWithSpacing()), false, ImGuiWindowFlags.ImGuiWindowFlags_NoMove);
+        boolean beginChild = ImGui.BeginChild(beginID, ImVec2.TMP_1.set(0, -ImGui.GetFrameHeightWithSpacing()));
         if(beginChild) {
             float GetWindowContentRegionWidth = ImGui.GetWindowContentRegionMax().x() - ImGui.GetWindowContentRegionMin().x();
             windowWidth = (int)GetWindowContentRegionWidth;
