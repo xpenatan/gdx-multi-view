@@ -17,10 +17,10 @@ public class MainApp extends ImGuiRenderer {
     @Override
     public void show() {
         super.show();
-        ImGui.GetIO().ConfigFlags(ImGuiConfigFlags.ImGuiConfigFlags_DockingEnable);
+        ImGui.getIO().configFlags(ImGuiConfigFlags.ImGuiConfigFlags_DockingEnable);
         // Viewport inputs not working
 //        ImGui.GetIO().set_ConfigFlags(ImGuiConfigFlags.ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags.ImGuiConfigFlags_DockingEnable));
-        ImGui.GetIO().SetDockingFlags(false, false, false, false);
+        ImGui.getIO().setDockingFlags(false, false, false, false);
 
         configFrameViewport();
     }
