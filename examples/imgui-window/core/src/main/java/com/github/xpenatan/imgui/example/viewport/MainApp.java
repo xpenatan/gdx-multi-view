@@ -9,18 +9,16 @@ import imgui.ImGuiConfigFlags;
 
 public class MainApp extends ImGuiRenderer {
 
-    boolean init = false;
-
     ImGuiGdxFrameWindow gameWindow1;
     ImGuiGdxFrameWindow gameWindow2;
 
     @Override
     public void show() {
         super.show();
-        ImGui.getIO().configFlags(ImGuiConfigFlags.ImGuiConfigFlags_DockingEnable);
+        ImGui.GetIO().ConfigFlags(ImGuiConfigFlags.ImGuiConfigFlags_DockingEnable);
         // Viewport inputs not working
-//        ImGui.GetIO().set_ConfigFlags(ImGuiConfigFlags.ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags.ImGuiConfigFlags_DockingEnable));
-        ImGui.getIO().setDockingFlags(false, false, false, false);
+//        ImGui.GetIO().ConfigFlags(ImGuiConfigFlags.ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags.ImGuiConfigFlags_DockingEnable));
+//        ImGui.GetIO().SetDockingFlags(false, false, false, false);
 
         configFrameViewport();
     }

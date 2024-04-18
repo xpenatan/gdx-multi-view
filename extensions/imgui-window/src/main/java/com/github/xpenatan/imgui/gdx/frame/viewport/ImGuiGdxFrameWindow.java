@@ -66,8 +66,8 @@ public class ImGuiGdxFrameWindow {
     public void render() {
         if(name == null)
             name = "";
-        ImGui.setNextWindowSize(ImVec2.TMP_1.set(startWidth, startHeight), ImGuiCond.ImGuiCond_FirstUseEver);
-        ImGui.setNextWindowPos(ImVec2.TMP_1.set(startX, startY), ImGuiCond.ImGuiCond_FirstUseEver);
+        ImGui.SetNextWindowSize(ImVec2.TMP_1.set(startWidth, startHeight), ImGuiCond.ImGuiCond_FirstUseEver);
+        ImGui.SetNextWindowPos(ImVec2.TMP_1.set(startX, startY), ImGuiCond.ImGuiCond_FirstUseEver);
 
         int mouseX = 0;
         int mouseY = 0;
@@ -77,30 +77,30 @@ public class ImGuiGdxFrameWindow {
         int windowY = 0;
 
         if(curFrameFocus)
-            ImGui.pushStyleColor(ImGuiCol.ImGuiCol_Text, activeColor);
+            ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Text, activeColor);
 
         EmuInput input = emuWindow.getEmuInput();
 
-        ImGui.begin(name);
+        ImGui.Begin(name);
         if(curFrameFocus)
-            ImGui.popStyleColor();
-        boolean beginChild = ImGui.beginChild(beginID, ImVec2.TMP_1.set(0, -ImGui.getFrameHeightWithSpacing()));
+            ImGui.PopStyleColor();
+        boolean beginChild = ImGui.BeginChild(beginID, ImVec2.TMP_1.set(0, -ImGui.GetFrameHeightWithSpacing()));
         if(beginChild) {
-            float GetWindowContentRegionWidth = ImGui.getWindowContentRegionMax().x() - ImGui.getWindowContentRegionMin().x();
+            float GetWindowContentRegionWidth = ImGui.GetWindowContentRegionMax().x() - ImGui.GetWindowContentRegionMin().x();
             windowWidth = (int)GetWindowContentRegionWidth;
-            windowHeight = (int)ImGui.getWindowHeight();
+            windowHeight = (int)ImGui.GetWindowHeight();
 
-            ImVec2 winPos = ImGui.getWindowPos();
+            ImVec2 winPos = ImGui.GetWindowPos();
             windowX = (int)winPos.x();
             windowY = (int)winPos.y();
 
             if(input.needsFocus())
-                ImGui.setWindowFocus();
+                ImGui.SetWindowFocus();
 
-            curFrameFocus = ImGui.isWindowFocused();
-            isWindowHovered = ImGui.isWindowHovered(ImGuiHoveredFlags.ImGuiHoveredFlags_AllowWhenBlockedByActiveItem);
+            curFrameFocus = ImGui.IsWindowFocused();
+            isWindowHovered = ImGui.IsWindowHovered(ImGuiHoveredFlags.ImGuiHoveredFlags_AllowWhenBlockedByActiveItem);
 
-            if(ImGui.invisibleButton(btnId, ImVec2.TMP_1.set(windowWidth, windowHeight)))
+            if(ImGui.InvisibleButton(btnId, ImVec2.TMP_1.set(windowWidth, windowHeight)))
                 curFrameFocus = true;
 
             emuWindow.begin(curFrameFocus, isWindowHovered, windowX, windowY, windowWidth, windowHeight);
@@ -111,11 +111,11 @@ public class ImGuiGdxFrameWindow {
 
             emuWindow.end();
 
-            ImGui.getWindowDrawList().addImage(emuWindow.getTextureID(), ImVec2.TMP_1.set(windowX, windowY), ImVec2.TMP_2.set(windowX + windowWidth, windowY + windowHeight), ImVec2.TMP_3.set(emuWindow.u, emuWindow.v), ImVec2.TMP_4.set(emuWindow.u2, emuWindow.v2));
+            ImGui.GetWindowDrawList().AddImage(emuWindow.getTextureID(), ImVec2.TMP_1.set(windowX, windowY), ImVec2.TMP_2.set(windowX + windowWidth, windowY + windowHeight), ImVec2.TMP_3.set(emuWindow.u, emuWindow.v), ImVec2.TMP_4.set(emuWindow.u2, emuWindow.v2));
         }
 
-        ImGui.endChild();
-        ImGui.separator();
+        ImGui.EndChild();
+        ImGui.Separator();
 
         stringBuilder.setLength(0);
 
@@ -131,8 +131,8 @@ public class ImGuiGdxFrameWindow {
         stringBuilder.append(mouseYLabel);
         stringBuilder.append(mouseY);
 
-        ImGui.text(stringBuilder.toString());
-        ImGui.end();
+        ImGui.Text(stringBuilder.toString());
+        ImGui.End();
     }
 
     public InputProcessor getInput() {

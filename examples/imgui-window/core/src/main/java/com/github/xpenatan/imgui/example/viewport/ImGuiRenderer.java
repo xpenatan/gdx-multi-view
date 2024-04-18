@@ -16,7 +16,7 @@ public abstract class ImGuiRenderer extends ScreenAdapter {
 
     @Override
     public void show() {
-        ImGui.createContext(false);
+        ImGui.CreateContext(true);
 //        ImGuiIO io = ImGui.GetIO();
 //        if(Gdx.app.getType() == Application.ApplicationType.WebGL) {
 //            // Not possible to have ini filename with webgl
@@ -39,8 +39,8 @@ public abstract class ImGuiRenderer extends ScreenAdapter {
 
         renderImGui();
 
-        ImGui.render();
-        ImDrawData drawData = ImGui.getDrawData();
+        ImGui.Render();
+        ImDrawData drawData = ImGui.GetDrawData();
         impl.render(drawData);
     }
 
