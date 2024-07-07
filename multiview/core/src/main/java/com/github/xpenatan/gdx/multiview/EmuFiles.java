@@ -8,6 +8,7 @@ public class EmuFiles implements Files {
     private Files gdxFiles;
 
     private String internalPrefix = "";
+    private String localPrefix = "";
 
     public EmuFiles(Files gdxFiles) {
         this.gdxFiles = gdxFiles;
@@ -15,6 +16,10 @@ public class EmuFiles implements Files {
 
     public void setInternalPrefix(String internalPrefix) {
         this.internalPrefix = internalPrefix;
+    }
+
+    public void setLocalPrefix(String localPrefix) {
+        this.localPrefix = localPrefix;
     }
 
     @Override
@@ -45,6 +50,7 @@ public class EmuFiles implements Files {
 
     @Override
     public FileHandle local(String path) {
+        path = localPrefix + path;
         return gdxFiles.local(path);
     }
 
