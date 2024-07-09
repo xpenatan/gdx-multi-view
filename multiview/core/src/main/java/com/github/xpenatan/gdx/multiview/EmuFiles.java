@@ -34,7 +34,9 @@ public class EmuFiles implements Files {
 
     @Override
     public FileHandle internal(String path) {
-        path = internalPrefix + path;
+        if(!path.contains(internalPrefix)) {
+            path = internalPrefix + path;
+        }
         return gdxFiles.internal(path);
     }
 
@@ -50,7 +52,9 @@ public class EmuFiles implements Files {
 
     @Override
     public FileHandle local(String path) {
-        path = localPrefix + path;
+        if(!path.contains(localPrefix)) {
+            path = localPrefix + path;
+        }
         return gdxFiles.local(path);
     }
 
