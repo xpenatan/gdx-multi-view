@@ -24,7 +24,19 @@ public class EmuFiles implements Files {
 
     @Override
     public FileHandle getFileHandle(String path, FileType type) {
-        return gdxFiles.getFileHandle(path, type);
+        switch(type) {
+            case Classpath:
+                return classpath(path);
+            case Internal:
+                return internal(path);
+            case External:
+                return external(path);
+            case Absolute:
+                return absolute(path);
+            case Local:
+                return local(path);
+        }
+        return null;
     }
 
     @Override
