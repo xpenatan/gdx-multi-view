@@ -76,7 +76,6 @@ public abstract class EmuWindow {
         this.emuInput = input;
         this.emuFiles = new EmuFiles(Gdx.files);
         this.emuGL20 = Gdx.gl30 != null ? new EmuGL30(Gdx.gl30) : new EmuGL20(Gdx.gl20);
-        frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 2560, 1080, true);
     }
 
     public boolean begin(boolean isWindowFocused, boolean isWindowHovered, int windowX, int windowY, int windowWidth, int windowHeight) {
@@ -86,6 +85,13 @@ public abstract class EmuWindow {
             this.isWindowFocused = isWindowFocused;
             this.windowWidth = windowWidth;
             this.windowHeight = windowHeight;
+
+            if(frameBuffer == null || frameBuffer.getWidth() != windowWidth || frameBuffer.getHeight() != windowHeight) {
+                if(frameBuffer != null) {
+                    frameBuffer.dispose();
+                }
+                frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, windowWidth, windowHeight, true);
+            }
 
             defaultHandler = EmuFrameBuffer.getDefaultFramebufferHandle();
             int framebufferHandle = frameBuffer.getFramebufferHandle();
