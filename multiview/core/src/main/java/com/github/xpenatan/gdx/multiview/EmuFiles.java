@@ -10,6 +10,8 @@ public class EmuFiles implements Files {
     private String internalPrefix = "";
     private String localPrefix = "";
 
+    public EmuFileHandleOverride fileHandleOverride;
+
     public EmuFiles(Files gdxFiles) {
         this.gdxFiles = gdxFiles;
     }
@@ -24,24 +26,33 @@ public class EmuFiles implements Files {
 
     @Override
     public FileHandle getFileHandle(String path, FileType type) {
+        FileHandle fileHandle = null;
         switch(type) {
             case Classpath:
-                return classpath(path);
+                fileHandle = gdxFiles.classpath(path);
+                break;
             case Internal:
-                return internal(path);
+                fileHandle = gdxFiles.internal(path);
+                break;
             case External:
-                return external(path);
+                fileHandle = gdxFiles.external(path);
+                break;
             case Absolute:
-                return absolute(path);
+                fileHandle = gdxFiles.absolute(path);
+                break;
             case Local:
-                return local(path);
+                fileHandle = gdxFiles.local(path);
+                break;
         }
-        return null;
+        if(fileHandle != null && fileHandleOverride != null) {
+            return fileHandleOverride.getFileHandle(fileHandle);
+        }
+        return fileHandle;
     }
 
     @Override
     public FileHandle classpath(String path) {
-        return gdxFiles.classpath(path);
+        return getFileHandle(path, FileType.Classpath);
     }
 
     @Override
@@ -49,17 +60,17 @@ public class EmuFiles implements Files {
         if(!path.contains(internalPrefix)) {
             path = internalPrefix + path;
         }
-        return gdxFiles.internal(path);
+        return getFileHandle(path, FileType.Internal);
     }
 
     @Override
     public FileHandle external(String path) {
-        return gdxFiles.external(path);
+        return getFileHandle(path, FileType.External);
     }
 
     @Override
     public FileHandle absolute(String path) {
-        return gdxFiles.absolute(path);
+        return getFileHandle(path, FileType.Absolute);
     }
 
     @Override
@@ -67,7 +78,7 @@ public class EmuFiles implements Files {
         if(!path.contains(localPrefix)) {
             path = localPrefix + path;
         }
-        return gdxFiles.local(path);
+        return getFileHandle(path, FileType.Local);
     }
 
     @Override
