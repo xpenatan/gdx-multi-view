@@ -32,6 +32,9 @@ public class EmuFiles implements Files {
                 fileHandle = gdxFiles.classpath(path);
                 break;
             case Internal:
+                if(!path.contains(internalPrefix)) {
+                    path = internalPrefix + path;
+                }
                 fileHandle = gdxFiles.internal(path);
                 break;
             case External:
@@ -41,6 +44,9 @@ public class EmuFiles implements Files {
                 fileHandle = gdxFiles.absolute(path);
                 break;
             case Local:
+                if(!path.contains(localPrefix)) {
+                    path = localPrefix + path;
+                }
                 fileHandle = gdxFiles.local(path);
                 break;
         }
@@ -57,9 +63,6 @@ public class EmuFiles implements Files {
 
     @Override
     public FileHandle internal(String path) {
-        if(!path.contains(internalPrefix)) {
-            path = internalPrefix + path;
-        }
         return getFileHandle(path, FileType.Internal);
     }
 
@@ -75,9 +78,6 @@ public class EmuFiles implements Files {
 
     @Override
     public FileHandle local(String path) {
-        if(!path.contains(localPrefix)) {
-            path = localPrefix + path;
-        }
         return getFileHandle(path, FileType.Local);
     }
 
