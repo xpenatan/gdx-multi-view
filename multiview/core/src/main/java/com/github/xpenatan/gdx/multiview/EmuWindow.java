@@ -4,12 +4,14 @@ import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 /**
  * This class was originally from XpeEngine and its now public. <br><br>
@@ -95,8 +97,9 @@ public abstract class EmuWindow {
 
             defaultHandler = EmuFrameBuffer.getDefaultFramebufferHandle();
             int framebufferHandle = frameBuffer.getFramebufferHandle();
+            frameBuffer.begin();
             EmuFrameBuffer.setDefaultFramebufferHandle(framebufferHandle);
-            frameBuffer.bind();
+            ScreenUtils.clear(Color.BLACK, true);
 
             emuGL20.begin(0, 0, windowWidth, windowHeight);
 
@@ -130,10 +133,8 @@ public abstract class EmuWindow {
             Gdx.gl20 = gdxGL20;
             Gdx.gl30 = gdxGL30;
             Gdx.files = gdxFiles;
-
             EmuFrameBuffer.setDefaultFramebufferHandle(defaultHandler);
-            FrameBuffer.unbind();
-            Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            frameBuffer.end();
 
             emuGL20.end();
             reset = false;
