@@ -4,6 +4,7 @@ import com.badlogic.gdx.AbstractInput;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.input.NativeInputConfiguration;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntSet;
 import com.badlogic.gdx.utils.IntSet.IntSetIterator;
@@ -567,6 +568,18 @@ public class EmuInput extends AbstractInput implements InputProcessor, Disposabl
     @Override
     public void setOnscreenKeyboardVisible(boolean visible, OnscreenKeyboardType type) {
         gdxInput.setOnscreenKeyboardVisible(visible, type);
+    }
+
+    @Override
+    public void openTextInputField(NativeInputConfiguration nativeInputConfiguration) {
+    }
+
+    @Override
+    public void closeTextInputField(boolean b) {
+    }
+
+    @Override
+    public void setKeyboardHeightObserver(KeyboardHeightObserver keyboardHeightObserver) {
     }
 
     @Override
