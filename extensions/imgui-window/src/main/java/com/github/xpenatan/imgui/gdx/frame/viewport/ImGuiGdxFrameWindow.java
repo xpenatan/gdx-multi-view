@@ -65,8 +65,8 @@ public class ImGuiGdxFrameWindow {
     public void render() {
         if(name == null)
             name = "";
-        ImGui.SetNextWindowSize(ImVec2.TMP_1.set(startWidth, startHeight), ImGuiCond.ImGuiCond_FirstUseEver);
-        ImGui.SetNextWindowPos(ImVec2.TMP_1.set(startX, startY), ImGuiCond.ImGuiCond_FirstUseEver);
+        ImGui.SetNextWindowSize(ImVec2.TMP_1.set(startWidth, startHeight), ImGuiCond.FirstUseEver);
+        ImGui.SetNextWindowPos(ImVec2.TMP_1.set(startX, startY), ImGuiCond.FirstUseEver);
 
         int mouseX = 0;
         int mouseY = 0;
@@ -76,7 +76,7 @@ public class ImGuiGdxFrameWindow {
         int windowY = 0;
 
         if(curFrameFocus)
-            ImGui.PushStyleColor(ImGuiCol.ImGuiCol_Text, activeColor);
+            ImGui.PushStyleColor(ImGuiCol.Text, activeColor);
 
         EmuInput input = emuWindow.getEmuInput();
 
@@ -96,7 +96,7 @@ public class ImGuiGdxFrameWindow {
                 ImGui.SetWindowFocus();
 
             curFrameFocus = ImGui.IsWindowFocused();
-            isWindowHovered = ImGui.IsWindowHovered(ImGuiHoveredFlags.ImGuiHoveredFlags_AllowWhenBlockedByActiveItem);
+            isWindowHovered = ImGui.IsWindowHovered(ImGuiHoveredFlags.AllowWhenBlockedByActiveItem);
 
             if(ImGui.InvisibleButton(btnId, ImVec2.TMP_1.set(windowWidth, windowHeight)))
                 curFrameFocus = true;

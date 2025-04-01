@@ -15,7 +15,9 @@ public class ImGuiInitScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        ImGuiLoader.init(() -> bulletInit = true);
+        ImGuiLoader.init((isSuccess, e) -> {
+            bulletInit = true;
+        });
     }
 
     @Override
