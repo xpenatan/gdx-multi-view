@@ -15,9 +15,7 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
-        maven { url = uri("https://oss.sonatype.org/content/repositories/releases/") }
-        maven { url = uri("https://oss.sonatype.org/content/repositories/releases/") }
+        maven { url = uri("https://central.sonatype.com/repository/maven-snapshots/") }
         maven {
             url = uri("http://teavm.org/maven/repository/")
             isAllowInsecureProtocol = true
