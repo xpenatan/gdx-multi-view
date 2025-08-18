@@ -11,6 +11,7 @@ import imgui.ImGuiCol;
 import imgui.ImGuiCond;
 import imgui.ImGuiHoveredFlags;
 import imgui.ImVec2;
+import imgui.idl.IDLBase;
 
 /**
  *
@@ -44,6 +45,8 @@ public class ImGuiGdxFrameWindow {
 
     private StringBuilder stringBuilder = new StringBuilder();
 
+    private IDLBase idlTextureId;
+
     public ImGuiGdxFrameWindow(int width, int height, float x, float y) {
         this(new EmuApplicationWindow(), width, height, x, y);
         this.startWidth = width;
@@ -56,6 +59,8 @@ public class ImGuiGdxFrameWindow {
         this.startX = x;
         this.startY = y;
         this.emuWindow = emuWindow;
+
+        idlTextureId = IDLBase.createInstance();
     }
 
     public void setName(String name) {
@@ -109,7 +114,7 @@ public class ImGuiGdxFrameWindow {
 
             emuWindow.end();
 
-            ImGui.GetWindowDrawList().AddImage(emuWindow.getTextureID(), ImVec2.TMP_1.set(windowX, windowY), ImVec2.TMP_2.set(windowX + windowWidth, windowY + windowHeight), ImVec2.TMP_3.set(emuWindow.u, emuWindow.v), ImVec2.TMP_4.set(emuWindow.u2, emuWindow.v2));
+            ImGui.GetWindowDrawList().AddImage(idlTextureId.native_setVoid(emuWindow.getTextureID()), ImVec2.TMP_1.set(windowX, windowY), ImVec2.TMP_2.set(windowX + windowWidth, windowY + windowHeight), ImVec2.TMP_3.set(emuWindow.u, emuWindow.v), ImVec2.TMP_4.set(emuWindow.u2, emuWindow.v2));
         }
 
         ImGui.EndChild();

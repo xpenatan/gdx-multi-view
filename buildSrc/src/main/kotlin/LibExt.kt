@@ -5,7 +5,7 @@ object LibExt {
     const val groupId = "com.github.xpenatan.gdx-multi-view"
     val libVersion: String = getVersion()
     const val gdxVersion = "1.13.5"
-    const val gdxImguiVersion = "-SNAPSHOT"
+    const val xImguiVersion = "-SNAPSHOT"
 }
 
 private fun getVersion(): String {
